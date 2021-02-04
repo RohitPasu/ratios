@@ -1,0 +1,29 @@
+from fuzzywuzzy import fuzz
+import csv
+
+with open('file1.csv', newline='') as f:
+    reader = csv.reader(f)
+    techProds = list(reader)
+
+with open('file2.csv', newline='') as g:
+    reader1 = csv.reader(g)
+    eosProds = list(reader1)
+
+listofclosest = []
+closestRatio = []
+
+#Partial Ratio
+for x in techProds:
+    pRatio = 0;
+    for y in eosProds:
+        Partial_Ratio = fuzz.partial_ratio(x, y)
+        if Partial_Ratio > pRatio:
+            pRatio = Partial_Ratio
+            closest = y
+    listofclosest.append(closest)
+    closestRatio.append(pRatio)
+
+zippedList = [techProds, listofclosest, closestRatio]
+with open('text.csv', 'w') as f:
+    writer = csv.writer(f, delimiter='\t')
+    writer.writerow(zippedList)
