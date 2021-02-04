@@ -1,0 +1,29 @@
+from fuzzywuzzy import fuzz
+import csv
+
+with open('file1.csv', newline='') as f:
+    reader = csv.reader(f)
+    techProds = list(reader)
+
+with open('file2.csv', newline='') as g:
+    reader1 = csv.reader(g)
+    eosProds = list(reader1)
+
+listofclosest = []
+closestRatio = []
+
+#Ratio
+for x in techProds:
+    ratio = 0;
+    for y in eosProds:
+        Ratio = fuzz.ratio(x, y)
+        if Ratio > ratio:
+            ratio = Ratio
+            closest = y
+    listofclosest.append(closest)
+    closestRatio.append(ratio)
+
+zippedList = [techProds, listofclosest, closestRatio]
+with open('text.csv', 'w') as f:
+    writer = csv.writer(f, delimiter='\t')
+    writer.writerow(zippedList)
