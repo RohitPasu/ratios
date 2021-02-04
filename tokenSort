@@ -1,0 +1,29 @@
+from fuzzywuzzy import fuzz
+import csv
+
+with open('file1.csv', newline='') as f:
+    reader = csv.reader(f)
+    techProds = list(reader)
+
+with open('file2.csv', newline='') as g:
+    reader1 = csv.reader(g)
+    eosProds = list(reader1)
+
+listofclosest = []
+closestRatio = []
+
+#Token Sort Ratio
+for x in techProds:
+    tsRatio = 0;
+    for y in eosProds:
+        Token_Sort_Ratio = fuzz.token_sort_ratio(x, y)
+        if Token_Sort_Ratio > tsRatio:
+            tsRatio = Token_Sort_Ratio
+            closest = y
+    listofclosest.append(closest)
+    closestRatio.append(tsRatio)
+
+zippedList = [techProds, listofclosest, closestRatio]
+with open('text.csv', 'w') as f:
+    writer = csv.writer(f, delimiter='\t')
+    writer.writerow(zippedList)
